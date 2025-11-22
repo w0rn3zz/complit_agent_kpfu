@@ -35,8 +35,8 @@ class GigaChatClient:
         Args:
             system_prompt: Системный промпт
             user_prompt: Запрос пользователя
-            temperature: Температура генерации (0.0-1.0)
-            max_tokens: Максимальное количество токенов
+            temperature: Температура генерации (0.0-1.0) - игнорируется
+            max_tokens: Максимальное количество токенов - игнорируется
             
         Returns:
             Сгенерированный ответ
@@ -47,11 +47,8 @@ class GigaChatClient:
             # Объединяем промпты (GigaChat не поддерживает system role)
             combined_prompt = f"{system_prompt}\n\n{user_prompt}"
             
-            response = client.chat(
-                combined_prompt,
-                temperature=temperature,
-                max_tokens=max_tokens,
-            )
+            # GigaChat имеет упрощенный API
+            response = client.chat(combined_prompt)
             
             # GigaChat возвращает строку напрямую
             if response:

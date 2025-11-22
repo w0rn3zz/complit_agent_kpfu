@@ -46,3 +46,12 @@ htmlcov/
 
 # Documentation (for AI assistant)
 docs/
+
+# ML Models (слишком большие для git)
+backend/data/models/*.pkl
+backend/data/models/rubert-tiny2-local/
+*.bin
+*.h5
+*.onnx
+*.pt
+*.pth
