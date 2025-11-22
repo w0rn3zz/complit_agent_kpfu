@@ -1,0 +1,62 @@
+[project]
+name = "kfu-ticket-classifier"
+version = "1.0.0"
+description = "Multi-Agent система для классификации заявок в IT-поддержку КФУ"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    "python-multipart>=0.0.6",
+    "pydantic>=2.5.3",
+    "pydantic-settings>=2.1.0",
+    "openai>=1.10.0",
+    "langchain>=0.1.6",
+    "langchain-openai>=0.0.5",
+    "langgraph>=0.0.20",
+    "tiktoken>=0.5.2",
+    "gigachat>=0.1.30",
+    "yandex-chain>=0.0.3",
+    "chromadb>=0.4.22",
+    "sentence-transformers>=2.3.1",
+    "faiss-cpu>=1.7.4",
+    "python-dotenv>=1.0.1",
+    "httpx>=0.26.0",
+    "aiohttp>=3.9.3",
+    "redis>=5.0.1",
+    "loguru>=0.7.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.4",
+    "pytest-asyncio>=0.23.4",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["agents", "api", "integrations", "models"]
+
+[dependency-groups]
+dev = [
+    "pytest>=7.4.4",
+    "pytest-asyncio>=0.23.4",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501"]

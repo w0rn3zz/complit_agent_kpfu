@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - AI_PROVIDER=openai
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - KFU_API_URL=${KFU_API_URL:-https://api.kpfu.ru/v1}
+      - KFU_API_KEY=${KFU_API_KEY:-}
+      - DEBUG=True
+      - CORS_ORIGINS=http://localhost:3000
+    volumes:
+      - ./backend:/app
+    restart: unless-stopped
+    networks:
+      - kfu-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - kfu-network
+
+networks:
+  kfu-network:
+    driver: bridge
