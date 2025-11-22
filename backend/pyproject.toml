@@ -2,7 +2,6 @@
 name = "kfu-ticket-classifier"
 version = "1.0.0"
 description = "Multi-Agent система для классификации заявок в IT-поддержку КФУ"
-readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.109.0",
@@ -11,20 +10,16 @@ dependencies = [
     "pydantic>=2.5.3",
     "pydantic-settings>=2.1.0",
     "openai>=1.10.0",
-    "langchain>=0.1.6",
-    "langchain-openai>=0.0.5",
-    "langgraph>=0.0.20",
-    "tiktoken>=0.5.2",
     "gigachat>=0.1.30",
-    "yandex-chain>=0.0.3",
-    "chromadb>=0.4.22",
-    "sentence-transformers>=2.3.1",
-    "faiss-cpu>=1.7.4",
     "python-dotenv>=1.0.1",
     "httpx>=0.26.0",
-    "aiohttp>=3.9.3",
-    "redis>=5.0.1",
-    "loguru>=0.7.2",
+    "pandas>=2.0.0",
+    "openpyxl>=3.1.0",
+    "torch>=2.0.0",
+    "transformers>=4.30.0",
+    "joblib>=1.3.0",
+    "scikit-learn>=1.3.0",
+    "numpy>=1.24.0",
 ]
 
 [project.optional-dependencies]
@@ -38,7 +33,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["agents", "api", "integrations", "models"]
+packages = ["src"]
 
 [dependency-groups]
 dev = [

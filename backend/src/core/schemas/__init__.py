@@ -1,17 +1,12 @@
 """Schemas для приложения"""
 
-from .ticket import TicketRequest, TicketResponse
-from .work_type import WorkTypeMatch, WorkTypeSchema
-from .analysis import AnalysisResult, AgentStep
-from .kfu import KFUTicketWebhook, KFUCallbackResponse
+from .ticket import TicketRequest, TicketWithAnswersRequest
+from .analysis import AnalysisResult, WorkTypeMatch, AgentClassificationResult
 
 __all__ = [
     "TicketRequest",
-    "TicketResponse",
-    "WorkTypeMatch",
-    "WorkTypeSchema",
+    "TicketWithAnswersRequest",
     "AnalysisResult",
-    "AgentStep",
-    "KFUTicketWebhook",
-    "KFUCallbackResponse",
+    "WorkTypeMatch",
+    "AgentClassificationResult",
 ]

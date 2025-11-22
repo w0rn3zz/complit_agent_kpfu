@@ -1,18 +1,14 @@
 from pydantic import BaseModel, Field
-from typing import Optional, Dict, Any
-from src.core.enums import TicketSource
+from typing import List, Optional
 
 
 class TicketRequest(BaseModel):
-    """Входящая заявка"""
+    """Входящая заявка для анализа"""
     text: str = Field(..., description="Текст заявки от пользователя")
-    source: TicketSource = Field(default=TicketSource.WEB_UI, description="Источник заявки")
-    external_id: Optional[str] = Field(None, description="ID заявки во внешней системе")
-    metadata: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Дополнительные данные")
 
 
-class TicketResponse(BaseModel):
-    """Ответ по заявке"""
-    ticket_id: str
-    status: str
-    message: str
+class TicketWithAnswersRequest(BaseModel):
+    """Заявка с ответами на вопросы"""
+    text: str = Field(..., description="Исходный текст заявки (обработанный)")
+    questions: List[str] = Field(..., description="Вопросы, которые были заданы")
+    answers: List[str] = Field(..., description="Ответы пользователя на вопросы")

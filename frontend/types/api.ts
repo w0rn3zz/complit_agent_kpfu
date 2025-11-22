@@ -36,9 +36,25 @@ export interface AnalysisResult {
   };
 }
 
+// Новые типы для системы агентов
+export interface AgentClassificationResult {
+  stage: string;
+  ticket_class?: string;
+  confidence?: number;
+  questions?: string[];
+  processed_text?: string;
+  reasoning?: string;
+}
+
 export interface TicketRequest {
   text: string;
   source?: string;
   external_id?: string;
   metadata?: Record<string, any>;
+}
+
+export interface TicketWithAnswersRequest {
+  text: string;
+  questions: string[];
+  answers: string[];
 }

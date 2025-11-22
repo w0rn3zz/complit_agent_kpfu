@@ -1,5 +1,5 @@
-"""Клиенты для внешних интеграций"""
+"""Клиенты для AI провайдеров"""
 
-from .kfu import KFUApiClient, get_kfu_client
+from .gigachat_client import GigaChatClient
 
-__all__ = ["KFUApiClient", "get_kfu_client"]
+__all__ = ["GigaChatClient"]

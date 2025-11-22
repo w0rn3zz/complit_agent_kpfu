@@ -5,58 +5,57 @@ Multi-Agent система для классификации заявок в IT-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
+import logging
 
 from src.core.config import settings
 from src.api import api_v1_router
-from src.core.clients import get_kfu_client
+
+# Настройка логирования
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Lifecycle менеджер приложения"""
-    print("🚀 Starting KFU IT Ticket Classifier")
-    print(f"📊 AI Provider: {settings.ai_provider}")
-    print(f"🔗 KFU API: {settings.kfu_api_url}")
-    print(f"🐛 Debug Mode: {settings.debug}")
+    logging.info("Starting KFU IT Ticket Classifier Multi-Agent System...")
+    logging.info("Loading ML models and initializing agents...")
     
     yield
     
-    print("👋 Shutting down...")
-    kfu_client = get_kfu_client()
-    await kfu_client.close()
+    logging.info("Shutting down...")
 
 
 app = FastAPI(
-    title="KFU IT Ticket Classifier",
+    title="KFU IT Ticket Classifier - Multi-Agent System",
     description="""
-    Multi-Agent система для автоматической классификации заявок в IT-поддержку КФУ
-    
-    ## Возможности
-    
-    - 🤖 Автоматическая классификация типов работ по смысловой нагрузке текста
-    - 📊 Предложение нескольких вариантов с процентами вероятности
-    - ✅ Определение релевантности департаменту информатизации и связи
-    - 💡 Генерация объяснений для каждого варианта
-    - 🔌 Интеграция с системой приема заявок КФУ через webhook
-    - ⚡ Real-time обновления через WebSocket
+    Интеллектуальная система для автоматической классификации заявок в IT-поддержку КФУ
     
     ## Архитектура
     
-    Система использует multi-agent подход:
-    - **RelevanceAgent** - проверка релевантности департаменту
-    - **ClassifierAgent** - классификация типов работ
-    - **ConfidenceAgent** - расчет уверенности для каждого варианта
-    - **ExplanationAgent** - генерация объяснений решений
+    ### Цепочка агентов:
+    1. **AbbreviationConvert** (GigaChat) - Исправление аббревиатур
+    2. **TicketAnalyzer** (ML) - Классификация на основе RuBERT + Logistic Regression
+    3. **DeepTicketAnalyzer** (GigaChat) - Глубокий анализ при низкой уверенности ML
+    4. **QuestionGenerator** (GigaChat) - Генерация уточняющих вопросов
     
-    ## Интеграция с КФУ
+    ## Возможности
     
-    Для быстрой интеграции с реальным API КФУ:
-    1. Настройте переменные окружения (KFU_API_URL, KFU_API_KEY)
-    2. Раскомментируйте код в `src/core/clients/kfu.py`
-    3. Настройте webhook endpoint в системе КФУ на `/api/v1/webhook/kfu`
+    - 🤖 Автоматическая классификация с ML моделью (>90% точность)
+    - 🧠 Интеллектуальный анализ с GigaChat
+    - 💬 Генерация уточняющих вопросов (до 5 вопросов)
+    - 📊 Оценка уверенности классификации
+    - ✅ Многоуровневая система принятия решений
+    - 📝 Обработка аббревиатур и сокращений
     
+    ## Endpoints
+    
+    - `/api/v1/classify` - Классификация заявки через систему агентов
+    - `/api/v1/classify-with-answers` - Финальная классификация с ответами
+    - `/api/v1/analyze-text` - Старый endpoint (для совместимости)
     """,
-    version="1.0.0",
+    version="2.0.0",
     lifespan=lifespan,
     docs_url="/docs",
     redoc_url="/redoc"
@@ -65,13 +64,12 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins.split(","),
+    allow_origins=settings.cors_origins_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Подключение роутеров
 app.include_router(api_v1_router)
 
 
@@ -79,41 +77,24 @@ app.include_router(api_v1_router)
 async def root():
     """Главная страница с информацией о сервисе"""
     return {
-        "service": "KFU IT Ticket Classifier",
-        "version": "1.0.0",
-        "description": "Multi-Agent система для автоматической классификации заявок",
-        "features": [
-            "Классификация типов работ по смысловой нагрузке текста",
-            "Определение релевантности департаменту информатизации",
-            "Расчет процентов уверенности для каждого варианта",
-            "Генерация объяснений решений",
-            "Интеграция с системой КФУ через webhook",
-            "Real-time обновления через WebSocket"
-        ],
-        "integrations": {
-            "kfu_api": {
-                "status": "ready",
-                "mode": "development",
-                "note": "Для интеграции с реальным API КФУ настройте переменные окружения и раскомментируйте код в kfu_client.py"
-            }
+        "service": "KFU IT Ticket Classifier - Multi-Agent System",
+        "version": "2.0.0",
+        "description": "Интеллектуальная система классификации заявок на базе ML + GigaChat",
+        "architecture": {
+            "agents": [
+                "AbbreviationConvert (GigaChat)",
+                "TicketAnalyzer (RuBERT + Logistic)",
+                "DeepTicketAnalyzer (GigaChat)",
+                "QuestionGenerator (GigaChat)"
+            ],
+            "ml_model": "RuBERT-tiny2 + Logistic Classifier",
+            "ai_backend": "GigaChat"
         },
         "endpoints": {
             "docs": "/docs",
             "redoc": "/redoc",
-            "health": "/api/v1/health",
-            "analyze": "/api/v1/analyze",
-            "webhook": "/api/v1/webhook/kfu",
-            "work_types": "/api/v1/work-types",
-            "websocket": "/ws/updates"
+            "classify": "/api/v1/classify",
+            "classify_with_answers": "/api/v1/classify-with-answers",
+            "analyze_text": "/api/v1/analyze-text (deprecated)"
         }
     }
-
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(
-        "src.main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=settings.debug
-    )
