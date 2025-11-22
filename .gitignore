@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Node.js
+node_modules/
+.next/
+out/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+.DS_Store
+
+# Docker
+*.pid
+*.seed
+*.log
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Documentation (for AI assistant)
+docs/
+
+# ML Models (слишком большие для git)
+backend/data/models/*.pkl
+backend/data/models/rubert-tiny2-local/
+*.bin
+*.h5
+*.onnx
+*.pt
+*.pth
