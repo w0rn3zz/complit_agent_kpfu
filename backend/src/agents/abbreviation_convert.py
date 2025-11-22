@@ -59,6 +59,11 @@ class AbbreviationConvertAgent:
                 max_tokens=512
             )
             
+            # ВАЖНО: если GigaChat вернул ошибку - используем исходный текст!
+            if "ошибка" in processed_text.lower() or "error" in processed_text.lower():
+                logger.warning("GigaChat вернул ошибку, используем исходный текст")
+                return text
+            
             logger.info(f"Текст после обработки: {processed_text[:100]}...")
             return processed_text.strip()
             
