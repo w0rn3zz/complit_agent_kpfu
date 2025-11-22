@@ -44,15 +44,19 @@ class GigaChatClient:
         try:
             client = self._get_client()
             
-            # Объединяем промпты (GigaChat не поддерживает system role)
-            combined_prompt = f"{system_prompt}\n\n{user_prompt}"
+            # Формируем payload для GigaChat (правильный формат!)
+            payload = {
+                "messages": [
+                    {"role": "user", "content": f"{system_prompt}\n\n{user_prompt}"}
+                ]
+            }
             
-            # GigaChat имеет упрощенный API
-            response = client.chat(combined_prompt)
+            # Вызов API GigaChat
+            response = client.chat(payload)
             
-            # GigaChat возвращает строку напрямую
-            if response:
-                return response
+            # Извлекаем текст ответа
+            if response and hasattr(response, 'choices') and len(response.choices) > 0:
+                return response.choices[0].message.content
             
             logger.error("GigaChat returned empty response")
             return "Извините, не могу сгенерировать ответ. Попробуйте еще раз."
