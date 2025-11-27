@@ -19,7 +19,7 @@ class TicketAnalyzerService:
         """Инициализация LLM клиента"""
         if settings.ai_provider == "openai":
             return AsyncOpenAI(api_key=settings.openai_api_key)
-        # TODO: Добавить поддержку GigaChat
+        # По умолчанию используем OpenAI
         return AsyncOpenAI(api_key=settings.openai_api_key)
     
     async def analyze_ticket(self, ticket_text: str) -> AnalysisResult:

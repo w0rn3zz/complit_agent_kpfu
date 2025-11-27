@@ -124,8 +124,3 @@ async def health_check():
         "status": "healthy",
         "service": "KFU IT Ticket Classifier"
     }
-    return {
-        "status": "healthy",
-        "service": "KFU IT Ticket Classifier",
-        "timestamp": datetime.now().isoformat(),
-    }

@@ -72,49 +72,39 @@
 
 ## 🚀 Быстрый старт
 
-### Установка
+### 1. Настройка переменных окружения
 
-**Backend:**
+Скопируйте файл с примером и заполните API ключи:
+
 ```bash
-cd backend
-pip install -e .
+cp .env.example .env
 ```
 
-**Frontend:**
-```bash
-cd frontend
-npm install
-```
-
-### Настройка
-
-Создайте `backend/.env`:
+Отредактируйте `.env` и добавьте ваши ключи:
 ```env
-GIGACHAT_API_KEY=ваш_ключ_gigachat
-AI_PROVIDER=gigachat
-HOST=0.0.0.0
-PORT=8000
+OPENAI_API_KEY=ваш_ключ_openai
+AI_PROVIDER=openai
 ```
 
-### Запуск
+### 2. Запуск через Docker
 
-**Backend:**
+Запустите всю систему одной командой:
+
 ```bash
-cd backend
-uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+docker-compose up --build -d
 ```
 
-**Frontend:**
+### 3. Проверка работы
+
+- **Frontend**: http://localhost:3000
+- **API Docs**: http://localhost:8000/docs
+- **API Health**: http://localhost:8000/api/v1/health
+
+### Остановка
+
 ```bash
-cd frontend
-npm run dev
+docker-compose down
 ```
-
-### Проверка
-
-- Frontend: http://localhost:3000
-- API Docs: http://localhost:8000/docs
-- API Health: http://localhost:8000/
 
 ---
 
