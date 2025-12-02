@@ -43,16 +43,23 @@ class GigaChatClient:
         """
         try:
             client = self._get_client()
+
+            print(system_prompt)
             
-            # Формируем payload для GigaChat (правильный формат!)
             payload = {
-                "messages": [
-                    {"role": "user", "content": f"{system_prompt}\n\n{user_prompt}"}
-                ]
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                                {"role": "user", "content": user_prompt}  
+            ],
+            "temperature": temperature,
+            "top_p": 0.9,
+            "max_tokens": max_tokens
             }
+            
             
             # Вызов API GigaChat
             response = client.chat(payload)
+            print(response.choices[0].message.content)
             
             # Извлекаем текст ответа
             if response and hasattr(response, 'choices') and len(response.choices) > 0:
