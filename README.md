@@ -67,7 +67,7 @@ cp .env.example .env
 
 Отредактируйте `.env` и добавьте ваши ключи:
 ```env
-GIGCHAT_API_KEY=your_openai_api_key_here
+GIGCHAT_API_KEY=your_gigachat_api_key_here
 ```
 
 ### 2. Запуск через Docker
