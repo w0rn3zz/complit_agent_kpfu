@@ -50,8 +50,8 @@ export default function AgentResultsPanel({
     return 'text-red-600';
   };
 
-  // Если есть вопросы - показываем форму
-  if (result.questions && result.questions.length > 0 && !result.ticket_class) {
+  // Если есть вопросы и стадия требует уточнения - показываем форму
+  if (result.questions && result.questions.length > 0 && result.stage === 'question_generation') {
     return (
       <div className="space-y-6">
         <div className="bg-blue-50 border-2 border-blue-500 rounded-lg p-6">
@@ -62,9 +62,21 @@ export default function AgentResultsPanel({
             </h3>
           </div>
 
-          <p className="text-sm text-blue-800 mb-6">
+          <p className="text-sm text-blue-800 mb-2">
             Пожалуйста, ответьте на следующие вопросы для точной классификации заявки:
           </p>
+
+          {result.ticket_class && (
+            <div className="bg-blue-100 border border-blue-300 rounded-md p-3 mb-4">
+              <p className="text-xs text-blue-700 font-medium">Предварительная классификация:</p>
+              <p className="text-sm text-blue-900">{result.ticket_class}</p>
+              {result.confidence && (
+                <p className="text-xs text-blue-600 mt-1">
+                  Уверенность: {(result.confidence * 100).toFixed(0)}% (требуется уточнение)
+                </p>
+              )}
+            </div>
+          )}
 
           <div className="space-y-4">
             {result.questions.map((question, index) => (
@@ -77,7 +89,7 @@ export default function AgentResultsPanel({
                   value={answers[index] || ''}
                   onChange={(e) => handleAnswerChange(index, e.target.value)}
                   placeholder="Введите ваш ответ..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400"
                   disabled={isLoadingAnswers}
                 />
               </div>
