@@ -52,12 +52,16 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex flex-col">
       <header className="bg-white border-b-2 border-blue-600 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
-              КФУ
+            <div className="w-24 h-24 flex items-center justify-center">
+              <img 
+                src="/kfu_logo.svg" 
+                alt="КФУ" 
+                className="w-full h-full object-contain"
+              />
             </div>
             <div className="border-l-2 border-blue-600 pl-4">
               <h1 className="text-xl font-semibold text-gray-900">
@@ -136,7 +140,7 @@ export default function Home() {
         )}
       </main>
 
-      <footer className="mt-16 bg-white border-t border-gray-200">
+      <footer className="mt-auto bg-white border-t border-gray-200">
         <div className="max-w-6xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between text-sm text-gray-600">
             <p>© 2025 Казанский федеральный университет</p>
