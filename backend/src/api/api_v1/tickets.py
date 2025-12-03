@@ -13,8 +13,6 @@ from src.agents import SystemControlAgent
 
 router = APIRouter(tags=["tickets"])
 
-# Инициализация сервисов
-analyzer_service = TicketAnalyzerService()
 agent_system = SystemControlAgent()
 
 
@@ -68,52 +66,6 @@ async def classify_with_answers(request: TicketWithAnswersRequest) -> AgentClass
         raise HTTPException(
             status_code=500,
             detail=f"Ошибка при финальной классификации: {str(e)}"
-        )
-
-
-@router.post("/analyze-text", response_model=AnalysisResult)
-async def analyze_text(request: TicketRequest) -> AnalysisResult:
-    """
-    Анализ текстовой заявки (старый endpoint для совместимости)
-    
-    Принимает текст заявки и возвращает:
-    - Релевантность IT департаменту
-    - Список подходящих типов работ с уверенностью
-    - Объяснения для каждого варианта
-    """
-    try:
-        result = await analyzer_service.analyze_ticket(ticket_text=request.text)
-        return result
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Ошибка при анализе заявки: {str(e)}"
-        )
-
-
-@router.post("/analyze-excel", response_model=List[AnalysisResult])
-async def analyze_excel(file: UploadFile = File(...)) -> List[AnalysisResult]:
-    """
-    Анализ заявок из Excel файла
-    
-    Принимает Excel файл с заявками и возвращает результаты анализа для каждой.
-    Ожидаемый формат: колонка с текстом заявок.
-    """
-    try:
-        if not file.filename.endswith(('.xlsx', '.xls')):
-            raise HTTPException(
-                status_code=400,
-                detail="Поддерживаются только Excel файлы (.xlsx, .xls)"
-            )
-        
-        results = await analyzer_service.analyze_excel(file)
-        return results
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Ошибка при обработке Excel файла: {str(e)}"
         )
 
 

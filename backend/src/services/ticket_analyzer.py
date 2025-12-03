@@ -13,14 +13,14 @@ class TicketAnalyzerService:
     """Сервис для анализа и классификации заявок"""
     
     def __init__(self):
-        self.client = self._init_llm_client()
+        self.client = ''
     
-    def _init_llm_client(self):
-        """Инициализация LLM клиента"""
-        if settings.ai_provider == "openai":
-            return AsyncOpenAI(api_key=settings.openai_api_key)
-        # По умолчанию используем OpenAI
-        return AsyncOpenAI(api_key=settings.openai_api_key)
+    # def _init_llm_client(self):
+    #     """Инициализация LLM клиента"""
+    #     if settings.ai_provider == "openai":
+    #         return AsyncOpenAI(api_key=settings.openai_api_key)
+    #     # По умолчанию используем OpenAI
+    #     return AsyncOpenAI(api_key=settings.openai_api_key)
     
     async def analyze_ticket(self, ticket_text: str) -> AnalysisResult:
         """Анализ одной заявки"""
