@@ -77,17 +77,10 @@ class DeepTicketAnalyzerAgent:
             if result:
                 class_name = result.get("class")
                 confidence = result.get("confidence", 0.0)
-                reasoning = result.get("reasoning", "")
                 
-                logger.info(f"GigaChat результат: класс={class_name}, уверенность={confidence:.2%}")
-                logger.info(f"Обоснование: {reasoning}")
-                
-                # Проверяем уверенность
                 if class_name and class_name != "нет классов" and confidence >= self.CONFIDENCE_THRESHOLD:
-                    logger.info(f"Класс определен с высокой уверенностью")
                     return False, class_name, confidence
                 else:
-                    logger.info(f"Не удалось определить класс с высокой уверенностью, нужны доп. вопросы")
                     return True, class_name, confidence
             else:
                 logger.warning("Не удалось распарсить ответ GigaChat")

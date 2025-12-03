@@ -47,8 +47,8 @@ htmlcov/
 # Documentation (for AI assistant)
 docs/
 
-# ML Models (слишком большие для git)
-backend/data/models/*.pkl
+# ML Models (большие файлы не загружаем в git)
+# BERT модель скачивается автоматически из HuggingFace при первом запуске
 backend/data/models/rubert-tiny2-local/
 *.bin
 *.h5

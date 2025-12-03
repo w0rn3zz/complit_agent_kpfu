@@ -10,7 +10,9 @@ services:
     env_file:
       - .env
     volumes:
-      - ./backend:/app
+      - ./backend/src:/app/src  # Код для hot-reload
+      - ./backend/data/prompts:/app/data/prompts  # Промпты
+      - models-cache:/app/data/models  # Кэш моделей (приоритет над bind mount)
     restart: unless-stopped
     networks:
       - kfu-network
@@ -28,6 +30,9 @@ services:
     restart: unless-stopped
     networks:
       - kfu-network
+
+volumes:
+  models-cache:  # Кэш для ML моделей (сохраняется между перезапусками)
 
 networks:
   kfu-network:

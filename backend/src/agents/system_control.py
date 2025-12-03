@@ -85,20 +85,13 @@ class SystemControlAgent:
             ClassificationResult с результатом или вопросами
         """
         try:
-            logger.info(f"=== Начало обработки заявки ===")
-            logger.info(f"Исходный текст: {ticket_text[:200]}...")
+            logger.info("Начало обработки заявки")
             
-            # Этап 1: Конвертация аббревиатур
-            logger.info("Этап 1: Обработка аббревиатур")
             processed_text = await self.abbreviation_agent.process(ticket_text)
-            logger.info(f"Обработанный текст: {processed_text[:200]}...")
-            
-            # Этап 2: ML классификация
-            logger.info("Этап 2: ML классификация")
             should_continue, ml_class, ml_confidence = await self.ml_agent.analyze(processed_text)
             
             if not should_continue and ml_class:
-                logger.info(f"ML модель уверена в результате: {ml_class} ({ml_confidence:.2%})")
+                logger.info(f"ML: {ml_class} ({ml_confidence:.2%})")
                 return ClassificationResult(
                     stage=ProcessingStage.ML_CLASSIFICATION,
                     ticket_class=ml_class,
@@ -107,14 +100,10 @@ class SystemControlAgent:
                     reasoning="Классифицировано ML моделью с высокой уверенностью"
                 )
             
-            logger.info(f"ML модель не уверена ({ml_confidence:.2%} if ml_confidence else 'N/A'), переход к глубокому анализу")
-            
-            # Этап 3: Глубокий анализ с GigaChat
-            logger.info("Этап 3: Глубокий анализ (GigaChat)")
             should_continue, deep_class, deep_confidence = await self.deep_agent.analyze(processed_text)
             
             if not should_continue and deep_class:
-                logger.info(f"GigaChat определил класс: {deep_class} ({deep_confidence:.2%})")
+                logger.info(f"Deep: {deep_class} ({deep_confidence:.2%})")
                 return ClassificationResult(
                     stage=ProcessingStage.DEEP_ANALYSIS,
                     ticket_class=deep_class,
@@ -123,16 +112,10 @@ class SystemControlAgent:
                     reasoning="Классифицировано GigaChat с высокой уверенностью"
                 )
             
-            logger.info("GigaChat не смог определить класс с высокой уверенностью, генерируем вопросы")
-            
-            # Этап 4: Генерация вопросов
-            logger.info("Этап 4: Генерация уточняющих вопросов")
             questions = await self.question_agent.generate_questions(
                 ticket_text=processed_text,
                 ml_class=ml_class or deep_class
             )
-            
-            logger.info(f"Сгенерировано {len(questions)} вопросов")
             
             return ClassificationResult(
                 stage=ProcessingStage.QUESTION_GENERATION,
@@ -165,8 +148,7 @@ class SystemControlAgent:
             ClassificationResult с финальным результатом
         """
         try:
-            logger.info(f"=== Финальный анализ с ответами ===")
-            logger.info(f"Вопросов: {len(questions)}, Ответов: {len(answers)}")
+            logger.info("Финальный анализ с ответами")
             
             # Используем QuestionGenerator для анализа с учетом ответов
             final_class, final_confidence = await self.question_agent.analyze_with_answers(
@@ -175,7 +157,7 @@ class SystemControlAgent:
                 answers=answers
             )
             
-            logger.info(f"Финальный результат: {final_class} ({final_confidence:.2%})")
+            logger.info(f"Финальная классификация: {final_class} ({final_confidence:.2%})")
             
             return ClassificationResult(
                 stage=ProcessingStage.COMPLETED,

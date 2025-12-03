@@ -8,6 +8,8 @@ import torch
 import numpy as np
 from transformers import AutoTokenizer, AutoModel
 
+from ..utils.model_downloader import ensure_models_available
+
 logger = logging.getLogger(__name__)
 
 
@@ -29,39 +31,35 @@ class TicketAnalyzerAgent:
     def _load_models(self):
         """Загрузка моделей"""
         try:
-            # Путь к моделям
             models_dir = Path(__file__).parent.parent.parent / "data" / "models"
             
-            # Загрузка токенизатора
+            if not ensure_models_available(models_dir):
+                logger.error("Не удалось загрузить модели")
+                return
+            
             tokenizer_path = models_dir / "tokenizer_new_dataset.pkl"
             if tokenizer_path.exists():
-                logger.info(f"Загрузка токенизатора из {tokenizer_path}")
                 self.tokenizer = joblib.load(str(tokenizer_path))
             else:
                 logger.warning(f"Токенизатор не найден: {tokenizer_path}")
             
-            # Загрузка BERT модели
             bert_model_path = models_dir / "rubert-tiny2-local"
             if bert_model_path.exists():
-                logger.info(f"Загрузка BERT модели из {bert_model_path}")
                 self.model = AutoModel.from_pretrained(str(bert_model_path))
-                self.model.eval()  # Режим inference
+                self.model.eval()
             else:
                 logger.warning(f"BERT модель не найдена: {bert_model_path}")
             
-            # Загрузка классификатора
             classifier_path = models_dir / "logistic_classifier_new_dataset.pkl"
             if classifier_path.exists():
-                logger.info(f"Загрузка классификатора из {classifier_path}")
                 self.classifier = joblib.load(str(classifier_path))
             else:
                 logger.warning(f"Классификатор не найден: {classifier_path}")
             
-            # Проверка что все модели загружены
             if self.tokenizer and self.model and self.classifier:
-                logger.info("Все модели успешно загружены")
+                logger.info("Модели успешно загружены")
             else:
-                logger.error("Не все модели загружены!")
+                logger.error("Не все модели загружены")
                 
         except Exception as e:
             logger.error(f"Ошибка при загрузке моделей: {e}")
@@ -85,17 +83,11 @@ class TicketAnalyzerAgent:
                 logger.error("Модели не загружены")
                 return True, None, None
             
-            # Получаем предсказание
             predicted_class, confidence = self._predict(text)
             
-            logger.info(f"Предсказанный класс: {predicted_class}, уверенность: {confidence:.2%}")
-            
-            # Проверяем порог уверенности
             if confidence >= self.CONFIDENCE_THRESHOLD:
-                logger.info(f"Уверенность {confidence:.2%} >= {self.CONFIDENCE_THRESHOLD:.0%}, возвращаем результат")
                 return False, predicted_class, confidence
             else:
-                logger.info(f"Уверенность {confidence:.2%} < {self.CONFIDENCE_THRESHOLD:.0%}, передаем следующему агенту")
                 return True, predicted_class, confidence
                 
         except Exception as e:
