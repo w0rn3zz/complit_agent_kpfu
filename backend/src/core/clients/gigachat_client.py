@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class GigaChatClient:
     
     def __init__(self):
-        self.api_key = settings.gigachat_credentials
+        self.api_key = settings.gigachat_api_key
         self._client = None
     
     def _get_client(self) -> GigaChat:

@@ -1,7 +1,11 @@
 import logging
-from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import BaseModel, Field
 from typing import Literal, Optional
+from pydantic import BaseModel
+from pydantic_settings import (
+    BaseSettings,
+    SettingsConfigDict,
+)
+
 
 LOG_DEFAULT_FORMAT = (
     "[%(asctime)s.%(msecs)03d] %(module)10s:%(lineno)-3d %(levelname)-7s - %(message)s"
@@ -24,13 +28,19 @@ class LoggingConfig(BaseModel):
     @property
     def log_level_value(self) -> int:
         return logging.getLevelNamesMapping()[self.log_level.upper()]
-    
 
 
 class AIConfig(BaseModel):
-    openai_api_key: Optional[str] = Field(None, description="OpenAI API ключ")
-    gigachat_credentials: Optional[str] = Field(None, description="GigaChat credentials")
-    ai_provider: str = Field("openai", description="AI провайдер: openai или gigachat")
+    gigachat_api_key: Optional[str] = None
+    ai_provider: str = "gigachat"
+
+
+class CORSConfig(BaseModel):
+    origins: str = "http://localhost:3000,http://localhost:8000"
+    
+    @property
+    def origins_list(self) -> list[str]:
+        return [origin.strip() for origin in self.origins.split(",")]
 
 
 class Settings(BaseSettings):
@@ -40,15 +50,11 @@ class Settings(BaseSettings):
         env_nested_delimiter="__",
     )
     
-    # AI настройки
-    openai_api_key: Optional[str] = None
-    gigachat_credentials: Optional[str] = None
-    ai_provider: str = "openai"
+    gigachat_api_key: Optional[str] = None
+    ai_provider: str = "gigachat"
     
-    # Общие настройки
     debug: bool = False
     cors_origins: str = "http://localhost:3000,http://localhost:8000"
-    
     logging: LoggingConfig = LoggingConfig()
     
     @property
