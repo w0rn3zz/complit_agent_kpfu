@@ -6,7 +6,7 @@
 
 ## 🎬 Демонстрация работы
 
-<img src="https://i.pixsafe.online/album?album=uibDj&file=screen-recording-2025-12-05-at-140346-foulir.gif" alt="Demo" width="100%" />
+![Demo](media/demo.gif)
 
 ---
 
